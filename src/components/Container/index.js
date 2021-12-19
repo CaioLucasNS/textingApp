@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#121214'
+        backgroundColor: '#121214',
+        justifyContent: 'center'
     }
 })
