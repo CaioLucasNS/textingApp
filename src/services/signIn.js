@@ -1,13 +1,13 @@
 import api from './api';
 
 // TODO:
-export const postSignIn = ({username, password}) => {
+export const postSignIn = async ({username, password}) => {
   const apiBody = {
     username,
     password,
   };
 
-  api
+  await api
     .post('sign-in', apiBody)
     .then(res => JSON.stringify(res.data))
     // .then(data => console.log('data =', data))

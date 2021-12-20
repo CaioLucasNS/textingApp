@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
-
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 
 import {postSignIn} from '../../services/signIn';
 
-import {TextInput} from '../../components/TextInput';
+import { Container } from '../../components/Container';
+import { TextInput } from '../../components/TextInput';
+
 import colors from '../../styles/global';
 
-export function Login() {
+export function Login({ navigation }) {
   const [user, setUser] = useState(''); // 'string'
   const [password, setPassword] = useState(''); // 'string'
   const [disabledButton, setDisabledButton] = useState(true);
@@ -18,7 +19,14 @@ export function Login() {
   }, [user, password]);
 
   const handleLogin = () => {
-    postSignIn({ username: user, password: password });
+    try {
+      // TODO: fazer o tratamento do erro caso não faça o login
+      postSignIn({ username: user, password: password }).catch(e => console.error(e));
+  
+      navigation.navigate('Home');
+    } catch {
+      Alert.alert('Erro ao fazer o login, tente novamente.')
+    }
   }
 
   const handleDisabledButton = () => (
@@ -28,39 +36,43 @@ export function Login() {
   );
 
   return (
-    <View style={styles.content}>
-      <TextInput
-        placeholder="User"
-        onChangeText={text => setUser(text)}
-        value={user}
-      />
-      <View style={{height: 10}} />
+    <Container>
+      <View style={styles.content}>
+        <TextInput
+          placeholder="User"
+          onChangeText={text => setUser(text)}
+          value={user}
+        />
+        <View style={{height: 10}} />
 
-      <TextInput
-        placeholder="Password"
-        onChangeText={text => setPassword(text)}
-        value={password}
-        secureTextEntry={true}
-      />
+        <TextInput
+          placeholder="Password"
+          onChangeText={text => setPassword(text)}
+          value={password}
+          secureTextEntry={true}
+        />
 
-      <View style={{height: 20}} />
+        <View style={{height: 20}} />
 
-      <Button
-        title="Login"
-        color={colors.orange}
-        mode="contained"
-        style={{borderRadius: 6, height: 40}}
-        onPress={handleLogin}
-        disabled={disabledButton}>
-        Login
-      </Button>
-    </View>
+        <Button
+          title="Login"
+          color={colors.orange}
+          mode="contained"
+          style={{borderRadius: 6, height: 40}}
+          onPress={handleLogin}
+          disabled={disabledButton}
+          icon="camera"
+        >
+          Login
+        </Button>
+      </View>
+    </Container>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
   },
   content: {
