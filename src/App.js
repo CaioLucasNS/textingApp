@@ -1,11 +1,14 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
+import {Container} from './components/Container';
+
+import {Login} from './screen/Login';
 
 const App = () => {
   return (
-    <View>
-      <Text>Hello world</Text>
-    </View>
+    <Container>
+      <Login />
+    </Container>
   );
 };
 
