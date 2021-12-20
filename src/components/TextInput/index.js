@@ -13,7 +13,8 @@ export function TextInput({
   value,
   secureTextEntry,
   icon,
-  style
+  style,
+  right
 }) {
   if (!label) label = placeholder;
 
@@ -29,6 +30,7 @@ export function TextInput({
       value={value}
       secureTextEntry={secureTextEntry} // bool
       icon={icon}
+      right={right}
     />
   );
 }

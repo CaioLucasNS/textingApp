@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -14,6 +14,7 @@ export function Login({ navigation }) {
   const [user, setUser] = useState(''); // 'string'
   const [password, setPassword] = useState(''); // 'string'
   const [disabledButton, setDisabledButton] = useState(true);
+  const [hidePassword, setHidePassword] = useState(true);
 
   useEffect(() => {
     handleDisabledButton()
@@ -50,8 +51,19 @@ export function Login({ navigation }) {
           placeholder="Password"
           onChangeText={text => setPassword(text)}
           value={password}
-          secureTextEntry={true}
+          secureTextEntry={hidePassword}
         />
+        <View 
+          style={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}
+        >
+          <Icon 
+            name="eye" 
+            size={20} 
+            color={hidePassword ? "#8a9d93" : "#c6c6c6"} 
+            onPress={() => setHidePassword(!hidePassword)}
+          />
+        </View>
+
 
         <View style={{height: 20}} />
 
