@@ -12,6 +12,7 @@ export function TextInput({
   onChangeText,
   value,
   secureTextEntry,
+  icon,
   style
 }) {
   if (!label) label = placeholder;
@@ -27,6 +28,7 @@ export function TextInput({
       onChangeText={onChangeText}
       value={value}
       secureTextEntry={secureTextEntry} // bool
+      icon={icon}
     />
   );
 }

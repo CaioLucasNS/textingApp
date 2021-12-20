@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {postSignIn} from '../../services/signIn';
 
@@ -61,7 +62,6 @@ export function Login({ navigation }) {
           style={{borderRadius: 6, height: 40}}
           onPress={handleLogin}
           disabled={disabledButton}
-          icon="camera"
         >
           Login
         </Button>
