@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 
-// import { Container } from './styles';
+import colors from '../../styles/global';
 
 export const Container = ({ children, style }) => (
     <View style={[styles.container, style]}>
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#121214',
+        backgroundColor: colors.containerPrimary,
         justifyContent: 'center'
     }
 })

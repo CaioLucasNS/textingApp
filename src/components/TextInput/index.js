@@ -1,22 +1,25 @@
 import React from 'react';
 import {TextInput as TextInputPaper} from 'react-native-paper';
 
+import colors from '../../styles/global';
 import styles from './style';
 
 export function TextInput({
-  mode = 'outlined', // flat
+  mode = 'flat', // outlined
   placeholder,
   label,
   keyboardType = 'default',
   onChangeText,
   value,
   secureTextEntry,
+  style
 }) {
   if (!label) label = placeholder;
 
   return (
     <TextInputPaper
-      style={styles.textInput}
+      style={[styles.textInput, style]}
+      activeUnderlineColor={ colors.containerSecondary }
       mode={mode}
       placeholder={placeholder}
       label={label}
