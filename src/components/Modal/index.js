@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Modal as ModalPaper, Portal, Provider} from 'react-native-paper';
 
-const Modal = ({children, visible = false, onDismiss, style}) => {
+export const Modal = ({children, visible = false, onDismiss, style}) => {
   return (
     <Provider>
       <Portal>
@@ -25,5 +25,3 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
 });
-
-export default Modal;
