@@ -1,10 +1,9 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Modal as ModalPaper, Portal, Provider} from 'react-native-paper';
+import {Modal as ModalPaper, Portal} from 'react-native-paper';
 
 export const Modal = ({children, visible = false, onDismiss, style}) => {
   return (
-    <Provider>
       <Portal>
         <ModalPaper
           visible={visible}
@@ -13,12 +12,12 @@ export const Modal = ({children, visible = false, onDismiss, style}) => {
           {children}
         </ModalPaper>
       </Portal>
-    </Provider>
   );
 };
 
 const styles = StyleSheet.create({
   modal: {
+    // width: '90%',
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 4,
