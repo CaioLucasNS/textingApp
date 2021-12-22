@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 
 import colors from '../../styles/global';
 
 export const Container = ({ children, style }) => (
-    <View style={[styles.container, style]}>
+    <SafeAreaView style={[styles.container, style]}>
         {children}
-    </View>
+    </SafeAreaView>
 );
 
 const styles = StyleSheet.create({

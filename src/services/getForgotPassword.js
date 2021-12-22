@@ -15,7 +15,6 @@ export const getForgotPassword = async ({username}) => {
         Alert.alert('Erro ao solicitar sua senha', 'informe o nome de usuário correto!')
       }
   } catch (error) {
-    console.error('[ERROR] ', error);
     return Promise.reject(error);
   }
 };

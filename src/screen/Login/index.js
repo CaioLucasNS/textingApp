@@ -32,17 +32,15 @@ export function Login({navigation}) {
 
   useEffect(() => {
     if (!showModalForgotPassword) {
-      handleGoBackToLogin()
+      handleClearFields()
     }
   }, [showModalForgotPassword]);
 
   const handleSignIn = () => {
     try {
-      // TODO: fazer o tratamento do erro caso não faça o login
       postSignIn({username: user, password: password})
-        .then(res => console.log(res))
-        .catch(e => console.error(e));
-      navigation.navigate('Home');
+        .then(res => res?.status == 200 ? navigation.navigate('Home') : null)
+        .catch(e => console.log(e));
     } catch (error) {
       console.error('[ERROR] SignIn ', error);
       Alert.alert('Erro ao fazer o login, tente novamente.');
@@ -65,7 +63,6 @@ export function Login({navigation}) {
   const handleForgotPassword = async () => {
     try {
       await getForgotPassword({username: user})
-        // .then(res => JSON.stringify(res))
         .then(data => setUserRegistration(data))
     } catch (error) {
       console.error('[ERROR] ForgotPassword ', error);
@@ -78,11 +75,17 @@ export function Login({navigation}) {
       ? setDisabledButton(false)
       : setDisabledButton(true);
 
+
   const handleGoBackToLogin = () => {
     setShowModalForgotPassword(false);
+    handleClearFields();
+  };
+
+  const handleClearFields = () => {
     setUserRegistration(null);
     setUser('');
-  }
+    setPassword('');
+  };
 
   return (
     <Container>
@@ -158,10 +161,6 @@ export function Login({navigation}) {
               >
                 Voltar para login
               </ButtonComponent>
-              {/* <ButtonComponent>teste</ButtonComponent>
-              <ButtonComponent>teste</ButtonComponent>
-              <ButtonComponent>teste</ButtonComponent>
-              <ButtonComponent>teste</ButtonComponent> */}
             </Modal>
           )}
         </>
