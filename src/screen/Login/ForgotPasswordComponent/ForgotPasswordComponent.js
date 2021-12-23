@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+
 import { Modal } from '../../../components/Modal';
 import { TextInput } from '../../../components/TextInput';
 import { ButtonComponent } from '../../../components/ButtonComponent';

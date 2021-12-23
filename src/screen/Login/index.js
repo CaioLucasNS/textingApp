@@ -13,17 +13,21 @@ import {ButtonComponent} from '../../components/ButtonComponent';
 import {Modal} from '../../components/Modal';
 
 import colors from '../../styles/global';
-import { ForgotPasswordComponent } from './ForgotPasswordComponent/ForgotPasswordComponent';
+import {ForgotPasswordComponent} from './ForgotPasswordComponent/ForgotPasswordComponent';
+import { SignUpComponent } from './SignUpComponent/SignUpComponent';
 // import {ModalForgotPassword} from './ModalForgotPassword';
 
 export function Login({navigation}) {
   const [user, setUser] = useState(''); // 'string'
   const [password, setPassword] = useState(''); // 'string'
+  const [signUpUser, setSignUpUser] = useState(''); // 'string'
+  const [signUpPassword, setSignUpPassword] = useState(''); // 'string'
   const [userRegistration, setUserRegistration] = useState(null); // {}
   const [disabledButton, setDisabledButton] = useState(true);
+  const [disabledButtonSignUp, setDisabledButtonSignUp] = useState(true);
   const [hidePassword, setHidePassword] = useState(true);
-  const [visibleModal, setVisibleModal] = useState(false);
 
+  const [showModalSignUp, setShowModalSignUp] = useState(false);
   const [showModalForgotPassword, setShowModalForgotPassword] = useState(false);
 
   useEffect(() => {
@@ -31,15 +35,19 @@ export function Login({navigation}) {
   }, [user, password]);
 
   useEffect(() => {
+    handleDisabledButtonSignUp();
+  }, [signUpUser, signUpPassword]);
+
+  useEffect(() => {
     if (!showModalForgotPassword) {
-      handleClearFields()
+      handleClearFields();
     }
   }, [showModalForgotPassword]);
 
   const handleSignIn = () => {
     try {
       postSignIn({username: user, password: password})
-        .then(res => res?.status == 200 ? navigation.navigate('Home') : null)
+        .then(res => (res?.status == 200 ? navigation.navigate('Home') : null))
         .catch(e => console.log(e));
     } catch (error) {
       console.error('[ERROR] SignIn ', error);
@@ -49,8 +57,12 @@ export function Login({navigation}) {
 
   const handleSignUp = () => {
     try {
-      postSignUp({username: user, password: password})
-        .then(res => console.log(res))
+      postSignUp({username: signUpUser, password: signUpPassword})
+        .then(res =>
+          res?.status == 200
+            ? handleRegisteredUser()
+            : null,
+        )
         .catch(e => console.error(e));
       // TODO: navegar de volta para login
       // navigation.navigate('Home');
@@ -62,22 +74,35 @@ export function Login({navigation}) {
 
   const handleForgotPassword = async () => {
     try {
-      await getForgotPassword({username: user})
-        .then(data => setUserRegistration(data))
+      await getForgotPassword({username: user}).then(data =>
+        setUserRegistration(data),
+      );
     } catch (error) {
       console.error('[ERROR] ForgotPassword ', error);
       Alert.alert('Erro, tente novamente.');
     }
   };
 
-  const handleDisabledButton = () =>
-    user !== '' && password !== ''
+  const handleDisabledButton = () => {
+    return user !== '' && password !== ''
       ? setDisabledButton(false)
       : setDisabledButton(true);
+  };
 
+  const handleDisabledButtonSignUp = () => {
+    return signUpUser !== '' && signUpPassword !== ''
+      ? setDisabledButtonSignUp(false)
+      : setDisabledButtonSignUp(true);
+  };
+
+  const handleRegisteredUser = () => {
+    Alert.alert('Usuário cadastrado com sucesso!', 'Faça o login na sua conta.')
+    handleGoBackToLogin();
+  };
 
   const handleGoBackToLogin = () => {
     setShowModalForgotPassword(false);
+    setShowModalSignUp(false);
     handleClearFields();
   };
 
@@ -85,6 +110,8 @@ export function Login({navigation}) {
     setUserRegistration(null);
     setUser('');
     setPassword('');
+    setSignUpUser('');
+    setSignUpPassword('');
   };
 
   return (
@@ -125,7 +152,7 @@ export function Login({navigation}) {
         <View style={{height: 10}} />
 
         {/* Esqueceu a senha */}
-        <ForgotPasswordComponent 
+        <ForgotPasswordComponent
           visibleModal={showModalForgotPassword}
           showModal={() => setShowModalForgotPassword(true)}
           hideModal={() => setShowModalForgotPassword(false)}
@@ -136,19 +163,18 @@ export function Login({navigation}) {
           handleForgotPassword={handleForgotPassword}
         />
 
-        <View style={styles.singUpContainer}>
-          <Text>Não tem uma conta?</Text>
-          <TouchableOpacity onPress={() => setVisibleModal(true)}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: colors.orange,
-              }}>
-              Cadastre-se
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* cadastro */}
+        <SignUpComponent
+          showModal={() => setShowModalSignUp(true)}
+          visibleModal={showModalSignUp}
+          hideModal={() => setShowModalSignUp(false)}
+          valueUser={signUpUser}
+          onChangeTextUser={text => setSignUpUser(text)}
+          valuePass={signUpPassword}
+          onChangeTextPass={text => setSignUpPassword(text)}
+          disabledButtonSignUp={disabledButtonSignUp}
+          handleSignUp={handleSignUp}
+        />
       </View>
     </Container>
   );
@@ -165,18 +191,5 @@ const styles = StyleSheet.create({
     height: '80%',
     borderRadius: 6,
     justifyContent: 'center',
-    
   },
-  singUpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    top: 20,
-    borderTopWidth: 2,
-    borderColor: colors.containerPrimary,
-    padding: 10,
-  },
-  // text: {
-  //   fontSize: 20,
-  // },
 });

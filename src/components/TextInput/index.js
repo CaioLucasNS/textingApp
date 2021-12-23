@@ -21,7 +21,7 @@ export function TextInput({
   return (
     <TextInputPaper
       style={[styles.textInput, style]}
-      activeUnderlineColor={ colors.containerSecondary }
+      activeUnderlineColor={ colors.orange }
       mode={mode}
       placeholder={placeholder}
       label={label}

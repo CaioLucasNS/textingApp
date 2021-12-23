@@ -1,5 +1,5 @@
 import api from './api';
-
+import { Alert } from 'react-native';
 // TODO:
 export const postSignUp = async ({username, password}) => {
   const url = 'sign-up';
@@ -11,13 +11,17 @@ export const postSignUp = async ({username, password}) => {
   try {
     const response = await api
       .post(url, apiBody)
-      .then(res => JSON.stringify(res.data))
-      .then(data => console.log('data =', data))
-      .catch(err => console.error('[error] ', err));
+      .then(res => res)
+      .catch(err => console.log('[error] ', err));
 
-    return response;
+      if (response && response.status == 200) {
+        // return api.defaults.headers.Authorization = `Bearer ${response.data}`; // token
+        return response;
+      } else {
+        Alert.alert('Erro ao tentar fazer cadastro!', 'Nome de usuário já existe, tente outro.');
+        return 
+      }
   } catch (error) {
-    console.error('[ERROR] ', error);
     return Promise.reject(error);
   }
 };
