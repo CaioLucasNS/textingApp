@@ -13,7 +13,7 @@ import {ButtonComponent} from '../../components/ButtonComponent';
 import {Modal} from '../../components/Modal';
 
 import colors from '../../styles/global';
-import style from '../../components/TextInput/style';
+import { ForgotPasswordComponent } from './ForgotPasswordComponent/ForgotPasswordComponent';
 // import {ModalForgotPassword} from './ModalForgotPassword';
 
 export function Login({navigation}) {
@@ -90,80 +90,51 @@ export function Login({navigation}) {
   return (
     <Container>
       <View style={styles.content}>
-        <TextInput
-          placeholder="Usuário"
-          onChangeText={text => setUser(text)}
-          value={user}
-          style={{marginBottom: 10}}
-        />
-
-        <TextInput
-          placeholder="Senha"
-          onChangeText={text => setPassword(text)}
-          value={password}
-          secureTextEntry={hidePassword}
-        />
-
-        <View style={{alignItems: 'flex-end', marginBottom: 20}}>
-          <Icon
-            name="eye"
-            size={20}
-            color={hidePassword ? colors.containerPrimary : colors.yellow}
-            onPress={() => setHidePassword(!hidePassword)}
+        {/* login */}
+        <View>
+          <TextInput
+            placeholder="Usuário"
+            onChangeText={text => setUser(text)}
+            value={user}
+            style={{marginBottom: 10}}
           />
+
+          <TextInput
+            placeholder="Senha"
+            onChangeText={text => setPassword(text)}
+            value={password}
+            secureTextEntry={hidePassword}
+          />
+
+          <View style={{alignItems: 'flex-end', marginBottom: 20}}>
+            <Icon
+              name="eye"
+              size={20}
+              color={hidePassword ? colors.containerPrimary : colors.yellow}
+              onPress={() => setHidePassword(!hidePassword)}
+            />
+          </View>
+
+          <ButtonComponent
+            labelStyle={{color: disabledButton ? null : '#fff'}}
+            onPress={handleSignIn}
+            disabled={disabledButton}>
+            Entrar
+          </ButtonComponent>
         </View>
-
-        <ButtonComponent
-          labelStyle={{color: disabledButton ? null : '#fff'}}
-          onPress={handleSignIn}
-          disabled={disabledButton}>
-          Entrar
-        </ButtonComponent>
-
         <View style={{height: 10}} />
 
         {/* Esqueceu a senha */}
-        <>
-          <View>
-            <TouchableOpacity onPress={() => setShowModalForgotPassword(true)}>
-              <Text style={styles.forgotPassword}>Esqueceu a senha?</Text>
-            </TouchableOpacity>
-          </View>
-          {showModalForgotPassword && (
-            <Modal
-              visible={showModalForgotPassword}
-              onDismiss={() => setShowModalForgotPassword(false)}>
-              <TextInput
-                placeholder="Usuário"
-                onChangeText={text => setUser(text)}
-                value={user}
-                style={{marginBottom: 10}}
-              />
-              <ButtonComponent onPress={handleForgotPassword}>
-                Ver senha
-              </ButtonComponent>
-
-              <View style={{alignItems: 'center', marginVertical: 10}}>
-                {!!userRegistration && (
-                  <>
-                    <Text style={styles.text}>Sua senha é:</Text>
-                    <Text
-                      style={styles.passwordStyle}>
-                      {userRegistration.password}
-                    </Text>
-                  </>
-                )}
-              </View>
-
-              <ButtonComponent 
-                onPress={handleGoBackToLogin}
-                style={{ marginVertical: 5 }}
-              >
-                Voltar para login
-              </ButtonComponent>
-            </Modal>
-          )}
-        </>
+        <ForgotPasswordComponent 
+          visibleModal={showModalForgotPassword}
+          showModal={() => setShowModalForgotPassword(true)}
+          hideModal={() => setShowModalForgotPassword(false)}
+          value={user}
+          onChangeText={text => setUser(text)}
+          userRegistration={userRegistration}
+          goBackLogin={handleGoBackToLogin}
+          handleForgotPassword={handleForgotPassword}
+        />
 
         <View style={styles.singUpContainer}>
           <Text>Não tem uma conta?</Text>
@@ -178,25 +149,6 @@ export function Login({navigation}) {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* {visibleModal && (
-          <Modal
-            visible={visibleModal}
-            onDismiss={() => setVisibleModal(false)}>
-            <TextInput
-              placeholder="Usuário"
-              onChangeText={text => setUser(text)}
-              value={user}
-            />
-            <View style={{height: 10}} />
-
-            <TextInput
-              placeholder="Senha"
-              onChangeText={text => setPassword(text)}
-              value={password}
-              secureTextEntry={hidePassword}
-            />
-          </Modal>
-        )} */}
       </View>
     </Container>
   );
@@ -224,21 +176,7 @@ const styles = StyleSheet.create({
     borderColor: colors.containerPrimary,
     padding: 10,
   },
-  forgotPassword: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: colors.orange,
-  },
-  text: {
-    fontSize: 20,
-  },
-  passwordStyle: {
-    fontSize: 20,
-    backgroundColor: colors.containerTertiary,
-    color: colors.yellow,
-    fontWeight: 'bold',
-    padding: 10,
-    borderRadius: 10,
-  }
+  // text: {
+  //   fontSize: 20,
+  // },
 });
