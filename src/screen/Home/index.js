@@ -15,6 +15,7 @@ import {Container} from '../../components/Container';
 import {TextInput} from '../../components/TextInput';
 import {getFeeds} from '../../services/getFeeds';
 import {postFeed} from '../../services/postFeed';
+import {postReaction} from '../../services/postReaction';
 
 import colors from '../../styles/global';
 
@@ -32,7 +33,7 @@ export function Home({navigation, route}) {
   useEffect(() => {
     console.log('re-rendering ::Home::');
     handleGetFeeds();
-  }, [sendingMessage])
+  }, [sendingMessage]);
 
   const handleGetFeeds = async () => {
     await getFeeds({token: token})
@@ -42,6 +43,18 @@ export function Home({navigation, route}) {
 
   const handlePostFeed = () => {
     postFeed({token: token, content: postMessage})
+      .then(res => res)
+      .catch(err => console.log('[error] ', err));
+  };
+
+  const handlePostReactionLike = (feedId) => {
+    postReaction({ token: token, feedId, like: true, love: false })
+      .then(res => console.log('handlePostReactionLike', res))
+      .catch(err => console.log('[error] ', err));
+  };
+
+  const handlePostReactionLove = (feedId) => {
+    postReaction({ token: token, feedId, like: false, love: true })
       .then(res => res)
       .catch(err => console.log('[error] ', err));
   };
@@ -93,7 +106,10 @@ export function Home({navigation, route}) {
                     name="like1"
                     size={20}
                     color={feed.likes > 0 ? '#1588ed' : '#000'}
-                    // onPress={}
+                    onPress={() => {
+                      handlePostReactionLike(feed.id);
+                      setSendingMessage(!sendingMessage);
+                    }}
                   />
                   <Text style={{marginHorizontal: 6}}>{feed.likes}</Text>
                 </View>
@@ -103,7 +119,10 @@ export function Home({navigation, route}) {
                     name="heart"
                     size={20}
                     color={feed.loves > 0 ? '#ff5c68' : '#000'}
-                    // onPress={}
+                    onPress={() => {
+                      handlePostReactionLove(feed.id);
+                      setSendingMessage(!sendingMessage);
+                    }}
                   />
                   <Text style={{marginHorizontal: 6}}>{feed.loves}</Text>
                 </View>

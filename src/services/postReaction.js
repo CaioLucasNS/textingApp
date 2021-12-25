@@ -1,10 +1,12 @@
 import {Alert} from 'react-native';
 import api from './api';
 
-export const postFeed = async ({token, content}) => {
+export const postReaction = async ({token, feedId, like, love}) => {
   const url = 'feed';
   const apiBody = {
-    content: content,
+    feedId: feedId,
+    like: like, // bool
+    love: love, //bool
   };
 
   try {
@@ -18,7 +20,7 @@ export const postFeed = async ({token, content}) => {
     if (response) {
       return response;
     } else {
-      Alert.alert('Erro ao publicar mensagem!', 'Tente novamente.');
+      Alert.alert('Erro ao reagir à mensagem!', 'Tente novamente.');
       return;
     }
   } catch (error) {
