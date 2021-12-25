@@ -15,7 +15,6 @@ export const postSignUp = async ({username, password}) => {
       .catch(err => console.log('[error] ', err));
 
       if (response && response.status == 200) {
-        // return api.defaults.headers.Authorization = `Bearer ${response.data}`; // token
         return response;
       } else {
         Alert.alert('Erro ao tentar fazer cadastro!', 'Nome de usuário já existe, tente outro.');

@@ -6,7 +6,7 @@ import {
   ScrollView,
   SafeAreaView,
   ActivityIndicator,
-  Alert
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {ButtonComponent} from '../../components/ButtonComponent';
@@ -20,14 +20,19 @@ import colors from '../../styles/global';
 
 export function Home({navigation, route}) {
   const {token} = route.params;
-  // console.log('token aq', token)
 
   const [feeds, setFeeds] = useState([]);
   const [postMessage, setPostMessage] = useState(null);
+  const [sendingMessage, setSendingMessage] = useState(false);
 
   useEffect(() => {
     handleGetFeeds();
   }, []);
+
+  useEffect(() => {
+    console.log('re-rendering ::Home::');
+    handleGetFeeds();
+  }, [sendingMessage])
 
   const handleGetFeeds = async () => {
     await getFeeds({token: token})
@@ -35,13 +40,11 @@ export function Home({navigation, route}) {
       .catch(err => console.log('[error] ', err));
   };
 
-  // const handlePostFeeds = () => {
-  //   // passar token no header
-  //   // TODO: passar content no body
-  //   postFeed({ token: token , content: postMessage })
-  //     .then(res => console.log('post aqui:', res))
-  //     .catch(err => console.log('[error] ', err));
-  // };
+  const handlePostFeed = () => {
+    postFeed({token: token, content: postMessage})
+      .then(res => res)
+      .catch(err => console.log('[error] ', err));
+  };
 
   const formatterCreatedAt = date => {
     date = date.slice(0, 10).split('-');
@@ -121,10 +124,13 @@ export function Home({navigation, route}) {
             value={postMessage}
             style={{marginBottom: 10, backgroundColor: '#fff'}}
           />
-          <ButtonComponent 
+          <ButtonComponent
             style={{width: '30%', alignSelf: 'flex-end'}}
-            // onPress={() => handlePostFeeds()}
-          >
+            onPress={() => {
+              setSendingMessage(!sendingMessage);
+              handlePostFeed();
+              setPostMessage(null);
+            }}>
             Enviar
           </ButtonComponent>
         </View>
@@ -152,7 +158,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     padding: 20,
     backgroundColor: colors.containerSecondary,
-    borderRadius: 10
+    borderRadius: 10,
   },
   headerMessage: {
     flexDirection: 'row',
