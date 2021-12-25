@@ -1,25 +1,47 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, ScrollView, SafeAreaView} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  ActivityIndicator,
+  Alert
+} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {ButtonComponent} from '../../components/ButtonComponent';
 
 import {Container} from '../../components/Container';
+import {TextInput} from '../../components/TextInput';
 import {getFeeds} from '../../services/getFeeds';
+import {postFeed} from '../../services/postFeed';
+
 import colors from '../../styles/global';
 
 export function Home({navigation, route}) {
   const {token} = route.params;
+  // console.log('token aq', token)
 
   const [feeds, setFeeds] = useState([]);
+  const [postMessage, setPostMessage] = useState(null);
 
   useEffect(() => {
     handleGetFeeds();
   }, []);
 
-  const handleGetFeeds = () => {
-    getFeeds({token})
+  const handleGetFeeds = async () => {
+    await getFeeds({token: token})
       .then(res => setFeeds(res))
       .catch(err => console.log('[error] ', err));
   };
+
+  // const handlePostFeeds = () => {
+  //   // passar token no header
+  //   // TODO: passar content no body
+  //   postFeed({ token: token , content: postMessage })
+  //     .then(res => console.log('post aqui:', res))
+  //     .catch(err => console.log('[error] ', err));
+  // };
 
   const formatterCreatedAt = date => {
     date = date.slice(0, 10).split('-');
@@ -89,16 +111,49 @@ export function Home({navigation, route}) {
     );
   };
 
-  return (
-    <Container>
-      <SafeAreaView>
+  if (feeds && feeds.length > 0) {
+    return (
+      <Container>
+        <View style={styles.postMessageContainer}>
+          <TextInput
+            placeholder="O que você está pensando?"
+            onChangeText={text => setPostMessage(text)}
+            value={postMessage}
+            style={{marginBottom: 10, backgroundColor: '#fff'}}
+          />
+          <ButtonComponent 
+            style={{width: '30%', alignSelf: 'flex-end'}}
+            // onPress={() => handlePostFeeds()}
+          >
+            Enviar
+          </ButtonComponent>
+        </View>
+
         <RenderMessages />
-      </SafeAreaView>
-    </Container>
-  );
+      </Container>
+    );
+  } else {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: colors.containerPrimary,
+        }}>
+        <ActivityIndicator size="large" color={colors.orange} />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
+  postMessageContainer: {
+    marginVertical: 20,
+    padding: 20,
+    backgroundColor: colors.containerSecondary,
+    borderRadius: 10
+  },
   headerMessage: {
     flexDirection: 'row',
     justifyContent: 'flex-end',

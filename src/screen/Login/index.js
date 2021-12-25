@@ -45,14 +45,7 @@ export function Login({navigation}) {
   const handleSignIn = () => {
     try {
       postSignIn({username: user, password: password})
-        .then(res => {
-
-          if(res?.status == 200) {
-            setToken(res.data);
-            navigation.navigate('Home', { token: token });
-          } 
-          return null
-        })
+        .then(res => navigation.navigate('Home', { token: res.data }))
         .catch(e => console.log(e));
     } catch (error) {
       console.error('[ERROR] SignIn ', error);
