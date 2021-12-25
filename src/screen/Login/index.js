@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, Text} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {View, StyleSheet, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import {getForgotPassword} from '../../services/getForgotPassword';
@@ -10,16 +9,15 @@ import {postSignUp} from '../../services/postSignUp';
 import {Container} from '../../components/Container';
 import {TextInput} from '../../components/TextInput';
 import {ButtonComponent} from '../../components/ButtonComponent';
-import {Modal} from '../../components/Modal';
 
 import colors from '../../styles/global';
 import {ForgotPasswordComponent} from './ForgotPasswordComponent/ForgotPasswordComponent';
 import { SignUpComponent } from './SignUpComponent/SignUpComponent';
-// import {ModalForgotPassword} from './ModalForgotPassword';
 
 export function Login({navigation}) {
   const [user, setUser] = useState(''); // 'string'
   const [password, setPassword] = useState(''); // 'string'
+  const [token, setToken] = useState(null);
   const [signUpUser, setSignUpUser] = useState(''); // 'string'
   const [signUpPassword, setSignUpPassword] = useState(''); // 'string'
   const [userRegistration, setUserRegistration] = useState(null); // {}
@@ -47,7 +45,14 @@ export function Login({navigation}) {
   const handleSignIn = () => {
     try {
       postSignIn({username: user, password: password})
-        .then(res => (res?.status == 200 ? navigation.navigate('Home') : null))
+        .then(res => {
+
+          if(res?.status == 200) {
+            setToken(res.data);
+            navigation.navigate('Home', { token: token });
+          } 
+          return null
+        })
         .catch(e => console.log(e));
     } catch (error) {
       console.error('[ERROR] SignIn ', error);
@@ -58,14 +63,13 @@ export function Login({navigation}) {
   const handleSignUp = () => {
     try {
       postSignUp({username: signUpUser, password: signUpPassword})
-        .then(res =>
-          res?.status == 200
-            ? handleRegisteredUser()
-            : null,
-        )
+        .then(res => {
+          if (res?.status == 200) {
+            handleRegisteredUser();
+          } 
+          return null
+        })
         .catch(e => console.error(e));
-      // TODO: navegar de volta para login
-      // navigation.navigate('Home');
     } catch (error) {
       console.error('[ERROR] SignUp ', error);
       Alert.alert('Erro ao fazer o login, tente novamente.');
